@@ -35,7 +35,7 @@ public class JavaRecords {
         Order<String> order = new Order<>("123", 40, "abc", "xyz");
         System.out.println(order.isLargeOrder());
         System.out.println(Arrays.toString(order.items()));
-        Order.OrderDetails order1 = new Order.OrderDetails(LocalDateTime.now()); //<>(1, 1000.0, "abc", "xyz").;
+        Order.OrderDetails order1 = new Order.OrderDetails(LocalDateTime.now());
         System.out.println(order1.deliveryDate());
     }
 
