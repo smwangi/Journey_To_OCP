@@ -37,6 +37,17 @@ public class JavaRecords {
         System.out.println(Arrays.toString(order.items()));
         Order.OrderDetails order1 = new Order.OrderDetails(LocalDateTime.now());
         System.out.println(order1.deliveryDate());
+        
+        // Using the record class with a constructor
+        Order<String> order2 = new Order<>("456", 20, "def", "uvw");
+        System.out.println(order2.isLargeOrder());
+        System.out.println(Arrays.toString(order2.items()));
+
+        // Rectangle record example
+        Rectangle rectangle = new Rectangle(5.0, 10.0);
+        System.out.println("Rectangle Area: " + rectangle.area());
+        System.out.println("Rectangle Perimeter: " + rectangle.perimeter());
+        System.out.printf("Length: %.2f, Width: %.2f%n", rectangle.length(), rectangle.width());
     }
 
     // Declaring a record in interface

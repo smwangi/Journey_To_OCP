@@ -1,4 +1,4 @@
-package Enums;
+package EnumTutorial;
 
 public interface EnumInterface {
     int apply(int a, int b);
