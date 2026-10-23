@@ -1,5 +1,6 @@
 package Concurrency;
 
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Interrupts {
@@ -97,6 +98,8 @@ public class Interrupts {
 
         InterruptibleExample.doSomethingInterruptibly();
         InterruptibleExample.performTaskWithTryLock();
+
+        DeadlockAvoidanceExample.performTaskAvoidingDeadlockWithTryLock();
     }
 }
 
@@ -152,6 +155,78 @@ class InterruptibleExample {
         } else {
             // The lock was busy, but we didn't block and waited for it
             System.out.println(Thread.currentThread().getName() + " could not acquire the lock using tryLock");
+        }
+    }
+}
+
+class DeadlockAvoidanceExample {
+
+    // Define two shared resource locks
+    private static final ReentrantLock lock1 = new ReentrantLock();
+    private static final ReentrantLock lock2 = new ReentrantLock();
+
+    public static void performTaskAvoidingDeadlock() {
+    }
+
+    public static void performTaskAvoidingDeadlockWithTryLock() {
+        // Thread 1 attempts to lock A then B u
+        Thread thread1 = new Thread(() -> acquireLocks(lock1, lock2, "Thread 1"));
+
+        // THread 2 attempts to lock B then A using tryLock to avoid deadlock
+        Thread thread2 = new Thread(() -> acquireLocks(lock2, lock1, "Thread 2"));
+
+        thread1.start();
+        thread2.start();
+    }
+
+    private static void acquireLocks(ReentrantLock firstLock, ReentrantLock secondLock, String threadName) {
+        boolean gotFirstLock = false;
+        boolean gotSecondLock = false;
+        while (true) {
+            try {
+                // Try to acquire first lock with a 50ms timeout (simulated by tryLock without timeout)
+                gotFirstLock = firstLock.tryLock(50, TimeUnit.MILLISECONDS);
+
+                if (gotFirstLock) {
+                    System.out.println(threadName + " acquired the first lock");
+
+                    // Simulate a small delay to induce potential deadlock scenario (contention)
+                    Thread.sleep(50);
+
+                    System.out.println(threadName + " trying to acquire the second lock");
+                    // Try to acquire the second lock with a 50ms timeout (simulated by tryLock without timeout)
+                    gotSecondLock = secondLock.tryLock(50, TimeUnit.MILLISECONDS);
+                }
+
+                if (gotSecondLock) {
+                    System.out.println(threadName + " acquired the second lock");
+                    break;
+                }
+            } catch(InterruptedException e) {
+                System.out.println(threadName + " was interrupted while trying to acquire locks");
+                Thread.currentThread().interrupt();
+                return;
+            } finally {
+                // Clean-up phase
+                if (!gotSecondLock && gotFirstLock) {
+                    System.out.println(threadName + " could not acquire the second lock, releasing the first lock");
+                    firstLock.unlock();
+                }
+                else if (gotSecondLock && gotFirstLock) {
+                   // Work finished successfully
+                   secondLock.unlock();
+                   firstLock.unlock();
+                   System.out.println(threadName + " released both locks");
+                   break;
+                }
+            }
+            // Locks not acquired, retry
+            // Sleep briefly before retrying to acquire locks
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
     }
 }
