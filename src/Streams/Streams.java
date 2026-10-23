@@ -39,10 +39,11 @@ package Streams;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Streams {
@@ -106,6 +107,13 @@ public class Streams {
         // Generate numbers starting from 1, increment by 2, but stop at 20
         Stream.iterate(1, n -> n <= 20, n -> n + 2) // bounded by predicate
                 .forEach(System.out::println);
+        
+        IntStream.concat(IntStream.range(0, 3), IntStream.range(3, 7))
+                .parallel()
+                .sorted()
+                .filter(i -> i < 5 && i > 1)
+                .mapToObj(i -> String.valueOf(i))
+                .forEach(s -> Logger.getLogger("test").log(Level.INFO, String.valueOf(s)));
     }
 
     class Person {
