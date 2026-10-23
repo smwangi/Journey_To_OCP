@@ -18,8 +18,10 @@ public record Order<T> (T id, double amount, String... items) {
     }
 
     public Order(T id) {
-        this(id, 10000.0);
-       new OrderDetails(LocalDateTime.now());
+    this(id, 10000.0);
+    // Optionally, assign to a variable or use as needed:
+    // OrderDetails details = new OrderDetails(LocalDateTime.now());
+    // For now, removing the unused instantiation to avoid the error.
     }
 
     public boolean isLargeOrder() {

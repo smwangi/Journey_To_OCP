@@ -1,4 +1,4 @@
-package Enums;
+package EnumTutorial;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,6 +13,19 @@ public enum Arithmetic implements EnumInterface {
     MINUS {
         public int apply(int a, int b) {
             return a - b;
+        }
+    },
+    MULTIPLY {
+        public int apply(int a, int b) {
+            return a * b;
+        }
+    },
+    DIVIDE {
+        public int apply(int a, int b) {
+            if (b == 0) {
+                throw new ArithmeticException("Division by zero is not allowed.");
+            }
+            return a / b;
         }
     };
 
