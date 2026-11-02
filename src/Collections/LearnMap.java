@@ -128,5 +128,27 @@ public class LearnMap {
         if (a instanceof D d1) {
             d1.d();
         }
+
+        Map<Integer, String> intMap = new HashMap<>();
+        Map<Integer, String> treeMap = new TreeMap<>();
+        Map<Integer, String> linkedHashMap = new LinkedHashMap<>();
+
+        int[] keys = { 30, 10, 20 };
+        for (int key : keys) {
+            intMap.put(key, "Value" + key);
+            treeMap.put(key, "Value" + key);
+            linkedHashMap.put(key, "Value" + key);
+        }
+
+        System.out.println("HashMap: " + intMap.keySet());
+        System.out.println("TreeMap: " + treeMap.keySet());
+        System.out.println("LinkedHashMap: " + linkedHashMap.keySet());
+
+        LinkedHashMap<Integer, String> cache = new LinkedHashMap<>(16, 0.75f, true);
+        cache.put(1, "A");
+        cache.put(2, "B");
+        cache.put(3, "C");
+        cache.get(1); // access the entry with key 1 to update its order
+        System.out.println("Cache after access: " + cache.keySet());
     }
 }
